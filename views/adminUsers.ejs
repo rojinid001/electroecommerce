@@ -1,0 +1,68 @@
+<%- include('./adminpartials/dashboard') %>
+<section>
+  <body>
+    <div class="admin-panel">
+      <%- include('./adminpartials/navbar') %>
+
+      <div class="container-fluid">
+        <div class="row">
+          <!-- Sidebar -->
+          <%- include('./adminpartials/navigation')%>
+          <div class="col-md-9 content">
+            <div class="container">
+              <h2>User Details</h2>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if (successMessages.length > 0) { %>
+                    <div class="alert alert-success">
+                      <% successMessages.forEach((message) => { %>
+                        <%= message %><br>
+                      <% }) %>
+                    </div>
+                  <% } %>
+    
+                  <% if (errorMessages.length > 0) { %>
+                    <div class="alert alert-danger">
+                      <% errorMessages.forEach((message) => { %>
+                        <%= message %><br>
+                      <% }) %>
+                    </div>
+                  <% } %>
+    
+                  <% users.forEach((user) => { %>
+                    <tr id="user-row-<%= user._id %>">
+                      <td><%= user.name %></td>
+                      <td><%= user.email %></td>
+                      <td>
+                        <!-- Block/Unblock button with confirmation -->
+                        <% if (user.isBlocked) { %>
+                          <form id="unblock-user-form-<%= user._id %>" action="/admin/user/unblock/<%= user._id %>" method="POST" onsubmit="return confirm('Are you sure you want to unblock this user?')">
+                            <button class="btn btn-warning">Unblock</button>
+                          </form>
+                        <% } else { %>
+                          <form id="block-user-form-<%= user._id %>" action="/admin/user/block/<%= user._id %>" method="POST" onsubmit="return confirm('Are you sure you want to block this user?')">
+                            <button class="btn btn-danger">Block</button>
+                          </form>
+                        <% } %>
+                      </td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</section>
+
+<%- include('./adminpartials/script') %>
+

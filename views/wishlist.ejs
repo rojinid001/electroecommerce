@@ -1,0 +1,86 @@
+<%- include('./partials/styles') %>
+<%- include('./partials/user-header') %>
+
+<div class="container mt-5">
+    <div class="row">
+      <div class="col-md-8 mx-auto">
+        <h1 class="wishlist-heading">My Wishlist</h1>
+        
+        <div class="flash-message">
+          <% if (messages && messages.length > 0) { %>
+            <% messages.forEach((message) => { %>
+              <div class="alert alert-<%= message.type %>">
+                <%= message.text %>
+              </div>
+            <% }); %>
+          <% } %>
+        </div>
+        
+        <% if (wishlist && wishlist.length > 0) { %>
+          <% wishlist.forEach((item) => { %>
+            <div class="wishlist-item" data-item-id="<%= item._id %>">
+              <div class="row align-items-center">
+                <div class="col-md-3">
+                  <img src="/images/<%= item.image[0] %>" alt="Product" class="img-fluid">
+                </div>
+                <div class="col-md-6">
+                  <h5 class="product-name"><%= item.name %></h5>
+                  <p class="product-details">Category: <%= item.category %></p>
+                  <p class="product-details">Price: $<%= item.price %></p>
+                </div>
+                <div class="col-md-3 text-end">
+                  <button class="btn btn-danger remove-btn" onclick="removeFromWishlist('<%= item._id %>')">
+                    <i class="fas fa-trash"></i> Remove
+                  </button>
+                </div>
+                
+              </div>
+            </div>
+          <% }); %>
+        <% } else { %>
+          <p class="empty-message">Your wishlist is empty.</p>
+        <% } %>
+  
+      </div>
+    </div>
+  </div>
+  
+  
+  <%- include('./partials/user-footer')%>
+  <!-- Add this script inside your HTML file or a separate JS file -->
+  <script>
+    async function removeFromWishlist(itemId) {
+      // Show a confirmation popup before proceeding with the deletion
+      const confirmed = window.confirm('Are you sure you want to remove this item from your wishlist?');
+      if (!confirmed) {
+        // If the user clicks Cancel in the confirmation popup, do nothing
+        return;
+      }
+  
+      try {
+        // Make an AJAX request to your backend to remove the item from the wishlist
+        const response = await fetch(`/api/wishlist/${itemId}`, {
+          method: 'DELETE',
+          credentials: 'include', // Send cookies for authentication if using sessions
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to remove item from wishlist');
+        }
+  
+        // If the response is successful, reload the page to see the updated wishlist
+        window.location.reload();
+      } catch (error) {
+        console.error(error);
+        alert('An error occurred while removing the item from the wishlist.');
+      }
+    }
+  </script>
+  
+ 
+  
+  
+  
+  
+  
+  

@@ -1,0 +1,134 @@
+<!-- styles -->
+<%- include('./partials/styles') %>
+<!-- HEADER -->
+<body>
+  <header>
+    <%- include('./partials/user-header') %>
+  </header>
+  <!-- NAVIGATION -->
+  <nav id="navigation">
+    <!-- container -->
+    <div class="container">
+      <!-- responsive-nav -->
+      <div id="responsive-nav">
+        <!-- NAV -->
+        <ul class="main-nav nav navbar-nav">
+          <li class="active"><a href="/">Home</a></li>
+          <li class="active"><a href="/profile">My profile</a></li>
+          <li><a href="/address">My Addresses</a></li>
+          <li><a href="/wishlist">Wishlist</a></li>
+          <li><a href="/ordersClient">Orders</a></li>
+        </ul>
+        <!-- /NAV -->
+      </div>
+      <!-- /responsive-nav -->
+    </div>
+    <!-- /container -->
+  </nav>
+  
+  <% if (successMessage && successMessage.length > 0) { %>
+  
+    <div class="alert alert-success alert-dismissible fade show " role="alert">
+      <%= successMessage[0] %>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  <% } %>
+
+  <!-- Main Content Area -->
+  <h2>My Address</h2>
+
+
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <!-- Address Card -->
+        <div class="card address-card">
+          <img src="../images/address.png" alt="Address Logo" class="address-logo">
+
+          <!-- Add New Shipping Address Section -->
+          <h3 class="text-center mb-4">Add New Shipping Address</h3>
+          <form>
+            <!-- Address fields go here (same as in the previous example) -->
+            <!-- ... -->
+
+            <!-- Submit Button -->
+            <div class="form-group row">
+              <div class="col-sm-12 text-center">
+                <button type="button" class="btn btn-primary" onclick="redirectToAddressFill()" style="padding: 6px 12px; font-size: 12px; border-radius: 4px; width: 100px;">Add</button>
+              </div>
+            </div>
+            
+          </form>
+        </div>
+      </div>
+
+
+      <div class="col-md-6">
+        
+        <% if (addresses.length === 0) { %>
+          <p>No addresses found.</p>
+        <% } else { %>
+          <% addresses.forEach((address) => { %>
+            <div class="card address-card mt-4">
+              <div class="card-body">
+                <h5 class="card-title">Shipping Address</h5>
+                <p><strong>Pincode:</strong> <%= address.pincode %></p>
+                <p><strong>Name:</strong> <%= address.firstName %> <%= address.lastName %></p>
+                <p><strong>Address:</strong> <%= address.address %>, <%= address.colony %>, <%= address.city %>, <%= address.state %></p>
+                <p><strong>Landmark:</strong> <%= address.landmark %></p>
+                <p><strong>Mobile:</strong> <%= address.mobile %></p>
+                <a href="/address/edit/<%= address._id %>" class="btn btn-primary">Edit</a>
+                <button type="button" class="btn btn-danger" onclick="deleteAddress('<%= address._id %>')" style="padding: 3px 8px; font-size: 12px; border-radius: 4px; width: 60px ;">Delete</button>
+
+              </div>
+            </div>
+          <% }) %>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <%- include('./partials/user-footer') %>
+  </footer>
+
+  <!-- jQuery Plugins -->
+  <%- include('./partials/javascript') %>
+  <script>
+    function redirectToAddressFill() {
+      window.location.href = "/address/fill";
+    }
+    function deleteAddress(addressId) {
+      if (confirm("Are you sure you want to delete this address?")) {
+        // Send a POST request to delete the address
+        fetch(`/addressdel/delete/${addressId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ addressId }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // Handle the response data, if needed
+            console.log(data);
+            // Reload the page to update the addresses list
+            location.reload();
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+    }
+    
+  </script>
+    
+  
+  
+
+</body>
+</html>
+
+

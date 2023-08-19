@@ -1,0 +1,247 @@
+<%- include('./partials/styles')%>
+<body>
+  <header>
+    <%- include('./partials/user-header')%>
+  </header>
+  <div class="section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-7">
+          <!-- Checkout Form -->
+          <form action="/checkoutsubmit" method="POST">
+            <!-- Billing Details -->
+            <div class="caption">
+              <div class="form-group">
+                <input class="input" type="text" name="firstName" placeholder="First Name" >
+              </div>
+              <div class="form-group">
+                <input class="input" type="text" name="lastName" placeholder="Last Name" >
+              </div>
+              <div class="form-group">
+                <input class="input" type="email" name="email" placeholder="Email">
+              </div>
+              <div class="form-group">
+                <input class="input" type="text" name="address" placeholder="Address">
+              </div>
+              <div class="form-group">
+                <input class="input" type="text" name="city" placeholder="City">
+              </div>
+              <div class="form-group">
+                <input class="input" type="text" name="country" placeholder="Country">
+              </div>
+              <div class="form-group">
+                <input class="input" type="text" name="zipCode" placeholder="ZIP Code">
+              </div>
+              <div class="form-group">
+                <input class="input" type="tel" name="telephone" placeholder="Telephone">
+              </div>
+            </div>
+            <!-- /Billing Details -->
+
+            <!-- Shipping Details -->
+            <div class="shiping-details">
+              <div class="section-title">
+                <h3 class="title">Shipping address</h3>
+              </div>
+              <div class="input-checkbox">
+                <input type="checkbox" id="shiping-address" name="shiping-address">
+                <label for="shiping-address">
+                  <span></span>
+                  Ship to a different address?
+                </label>
+              </div>
+              <div class="caption">
+                <div class="form-group">
+                  <input class="input" type="text" name="ship_firstName" placeholder="First Name" >
+                </div>
+                <div class="form-group">
+                  <input class="input" type="text" name="ship_lastName" placeholder="Last Name" >
+                </div>
+                <div class="form-group">
+                  <input class="input" type="email" name="ship_email" placeholder="Email" >
+                </div>
+                <div class="form-group">
+                  <input class="input" type="text" name="ship_address" placeholder="Address">
+                </div>
+                <div class="form-group">
+                  <input class="input" type="text" name="ship_city" placeholder="City">
+                </div>
+                <div class="form-group">
+                  <input class="input" type="text" name="ship_country" placeholder="Country">
+                </div>
+                <div class="form-group">
+                  <input class="input" type="text" name="ship_zipCode" placeholder="ZIP Code">
+                </div>
+                <div class="form-group">
+                  <input class="input" type="tel" name="ship_telephone" placeholder="Telephone">
+                </div>
+              </div>
+            </div>
+            <!-- /Shipping Details -->
+
+            <!-- Order Details -->
+            <div class="col-md-5 order-details">
+              <div class="section-title text-center">
+                <h3 class="title">Your Order</h3>
+              </div>
+              <div class="order-summary">
+                <div class="order-col">
+                  <div><strong>PRODUCT</strong></div>
+                  <div><strong>TOTAL</strong></div>
+                </div>
+                <div class="order-products">
+                  <% if (cartItems && cartItems.length > 0) { %>
+                    <% cartItems.forEach((cartItem) => { %>
+                      <div class="order-col">
+                        <div><%= cartItem.product.name %> x <%= cartItem.quantity %></div>
+                        <div>Rs<%= cartItem.product.price %></div>
+                      </div>
+                    <% }); %>
+                  <% } else { %>
+                    <div>No items in the cart</div>
+                  <% } %>
+                </div>
+                
+                
+                
+                
+                
+                <div class="order-col">
+                  <div>Shipping</div>
+                  <div><strong>FREE</strong></div>
+                </div>
+                <div class="order-col">
+                  <div><strong>TOTAL</strong></div>
+                  <div class="order-col">
+                    <div><strong>TOTAL</strong></div>
+                    <div><strong class="order-total" id="totalAmount" data-amount="<%= totalAmount %>">Rs<%= totalAmount %></strong></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /Order Details -->
+
+            <!-- Form submit button -->
+            <button type="button" class="primary-btn order-submit small-button" onclick="placeOrder()">Place Order</button>
+
+
+
+          </form>
+          <!-- /Checkout Form -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <%- include('./partials/user-footer')%>
+  </footer>
+  <%- include('./partials/javascript')%>
+  <script>
+    function openRazorpay(totalAmount) {
+      const keyId = 'rzp_test_ISfErmWBlVaoBh';
+      const amountInPaise = totalAmount * 100;
+  
+      const options = {
+        key: keyId,
+        amount: amountInPaise,
+        currency: 'INR',
+        name: 'Electro ecom',
+        description: 'Test Payment',
+        image: '', // Replace with your company logo URL
+        handler: function (response) {
+          console.log(response);
+          alert('Payment successful');
+        },
+        prefill: {
+          name: 'Rojin I D',
+          email: 'rojinid99@gmail.com',
+          contact: '8971582431'
+        }
+      };
+  
+      const rzp = new Razorpay(options);
+      rzp.open();
+    }
+    function submitForm() {
+  try {
+    console.log('Submitting form...');
+    document.querySelector('form').submit();
+  } catch (error) {
+    console.error('Error submitting form:', error);
+  }
+}
+
+ function placeOrder() {
+    const form = document.querySelector('form');
+
+    // Check if the form is valid
+    if (form.checkValidity()) {
+      const totalAmountElement = document.getElementById('totalAmount');
+      const totalAmount = parseFloat(totalAmountElement.dataset.amount);
+
+      // Collect form data
+      const formData = new FormData(form);
+
+      // Check if any required field is empty
+      let fieldsComplete = true;
+  const requiredFields = [
+    'firstName', 'lastName', 'email', 'address', 'city',
+    'country', 'zipCode', 'telephone'
+  ];
+
+  // Iterate over the required fields and validate their values
+  requiredFields.forEach(field => {
+    if (!formData.get(field)) {
+      fieldsComplete = false;
+    }
+  });
+
+  // Check shipping details if necessary
+  const shipToDifferentAddress = document.getElementById('shiping-address').checked;
+  if (shipToDifferentAddress) {
+    const requiredShippingFields = [
+      'ship_firstName', 'ship_lastName', 'ship_email', 'ship_address',
+      'ship_city', 'ship_country', 'ship_zipCode', 'ship_telephone'
+    ];
+
+    requiredShippingFields.forEach(field => {
+      if (!formData.get(field)) {
+        fieldsComplete = false;
+      }
+    });
+  }
+     
+
+      if (fieldsComplete) {
+        // Send form data to the server using Fetch API or XMLHttpRequest
+        fetch('/checkoutsubmit', {
+          method: 'POST',
+          body: formData,
+        })
+          .then(response => {
+            if (response.ok) {
+              // Open the Razorpay payment popup
+              openRazorpay(totalAmount);
+            } else {
+              throw new Error('Form submission failed');
+            }
+          })
+          .catch(error => {
+            const errorMessage = `Error: ${error.message}`;
+            window.alert(errorMessage);
+          });
+      } else {
+        // Display alert for incomplete fields
+        window.alert('Please fill in all required fields.');
+      }
+    } else {
+      // Display validation errors or messages here
+      window.alert('Please correct the form errors before submitting.');
+    }
+  }
+
+  </script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+</body>
+

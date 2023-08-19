@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout Page</title>
+
+  <!-- Other meta tags and CSS stylesheets -->
+
+  <!-- Razorpay SDK script -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+
+<body>
+  <!-- Your checkout form or other content here -->
+
+  <!-- Add a Buy button to trigger the payment -->
+  <button onclick="handlePayment()">Buy</button>
+
+  <script>
+    function handlePayment() {
+      // Fetch the necessary data from the form or other elements
+      const amount = 1000; // Set the amount dynamically based on your order total
+      const currency = 'INR'; // Set the currency (e.g., INR, USD, etc.)
+      const receipt = 'order_123'; // Generate a unique receipt ID for each order
+      const notes = { description: 'Payment for electronic gadgets' }; // Any additional notes you want to include
+
+      // Make an API call to your server to create a payment order
+      fetch('/payment/create-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ amount, currency, receipt, notes }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // Call the Razorpay payment interface with the obtained order ID
+          const options = {
+            key: 'YOUR_RAZORPAY_KEY_ID', // Replace with your actual Razorpay key ID
+            amount: data.orderId, // Pass the order ID received from the server
+            currency: currency,
+            name: 'Your Company Name', // Replace with your company name
+            description: 'Payment for electronic gadgets', // Replace with a description
+            handler: function (response) {
+              // Handle the payment success response here
+              // You can call your server to verify the payment using response.razorpay_payment_id and response.razorpay_signature
+              fetch('/payment/payment-success', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(response),
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  // Handle the success/failure response from your server
+                  console.log(data);
+                  // Redirect or show a success message to the user
+                });
+            },
+            prefill: {
+              email: 'user@example.com', // Replace with the user's email (if available)
+              contact: '9999999999', // Replace with the user's contact number (if available)
+            },
+          };
+
+          // Call the Razorpay checkout function
+          const rzp = new Razorpay(options);
+          rzp.open();
+        })
+        .catch((error) => {
+          console.error('Error creating payment:', error);
+          // Handle the error case here
+        });
+    }
+  </script>
+</body>
+
+</html>

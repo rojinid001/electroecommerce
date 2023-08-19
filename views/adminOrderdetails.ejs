@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+</head>
+
+<body>
+    <%- include('./adminpartials/dashboard')%>
+    <section>
+        <div class="admin-panel">
+            <%- include('./adminpartials/navbar') %>
+
+            <div class="container-fluid">
+                <div class="row">
+                    <!-- Sidebar -->
+                    <%- include('./adminpartials/navigation')%>
+
+                    <div class="col-md-9">
+                        <!-- Order Details -->
+                        <div class="card mt-4">
+                            <% if (successMessages && successMessages.length > 0) { %>
+                                <div class="alert alert-success">
+                                    <% successMessages.forEach(message => { %>
+                                        <%= message %><br>
+                                    <% }); %>
+                                </div>
+                            <% } %>
+                            
+                            <% if (errorMessages && errorMessages.length > 0) { %>
+                                <div class="alert alert-danger">
+                                    <% errorMessages.forEach(message => { %>
+                                        <%= message %><br>
+                                    <% }); %>
+                                </div>
+                            <% } %>
+                            <!-- ... Card header ... -->
+                            <div class="card-body">
+                                <h3>Order ID: <%= order._id %></h3>
+                                <p>Customer Name: <%= order.billing.firstName %> <%= order.billing.lastName %></p>
+                                <p>Order Status: Pending</p>
+
+                                <h4>Billing Details:</h4>
+                                <p>Name: <%= order.billing.firstName %> <%= order.billing.lastName %></p>
+                                <p>Address: <%= order.billing.address %>, <%= order.billing.city %>, <%= order.billing.country %></p>
+                                <p>Phone: <%= order.billing.telephone %></p>
+
+                                <h4>Shipping Details:</h4>
+                                <p>Name: <%= order.shipping.firstName %> <%= order.shipping.lastName %></p>
+                                <p>Address: <%= order.shipping.address %>, <%= order.shipping.city %>, <%= order.shipping.country %></p>
+                                <p>Phone: <%= order.shipping.telephone %></p>
+
+                                <h4>Order Items:</h4>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Product Name</th>
+                                            <th>Quantity</th>
+                                            
+                                            <th>Total Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% if (cart.items && cart.items.length > 0) { %>
+                                            <% cart.items.forEach(item => { %>
+                                                <tr>
+                                                    <td><%= item.product.name %></td>
+                                                    <td><%= item.quantity %></td>
+                                                    
+                                                    <td>Rs<%= item.quantity * item.price %></td>
+                                                </tr>
+                                            <% }); %>
+                                        <% } else { %>
+                                            <tr>
+                                                <td colspan="4">No items found.</td>
+                                            </tr>
+                                        <% } %>
+                                    </tbody>
+                                </table>
+                                
+                                <h4>Total: Rs<%= order.total %></h4>
+
+                                <div class="d-grid gap-2">
+                                    <form action="/shipped/<%= orderId %>" method="POST">
+                                        <input type="hidden" name="_method" value="PUT">
+                                        <button type="submit" class="btn btn-primary<%= order.status === 'Shipped' ? ' disabled' : '' %><%= order.status === 'Shipped' ? ' btn-warning' : '' %>">
+                                            <%= order.status === 'Shipped' ? 'Shipped' : 'Mark as Shipped' %>
+                                        </button>
+                                        
+                                      </form>
+                                      
+                                      <form action="/cancel/<%= orderId %>" method="POST">
+                                        <input type="hidden" name="_method" value="PUT">
+                                        <button type="submit" class="btn btn-danger<%= order.status === 'Cancelled' ? ' disabled' : '' %>">
+                                          <%= order.status === 'Cancelled' ? 'Cancelled' : 'Cancel Order' %>
+                                        </button>
+                                      </form>
+                                      
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <%- include('./adminpartials/script') %>
+        </div>
+    </section>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+       
+</body>
+
+</html>

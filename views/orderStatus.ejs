@@ -1,0 +1,89 @@
+<%- include('./partials/styles')%>
+<style>
+    .status-icon {
+      font-size: 36px; /* Increased icon size */
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+    
+    .card {
+      border: none;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s;
+      padding: 20px; /* Increased padding */
+      text-align: center;
+      font-size: 18px; /* Increased font size */
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .pending {
+      color: #ef233c; /* Reddish Pink */
+    }
+    
+    .shipped {
+      color: #ef233c; /* Reddish Pink */
+    }
+    
+    .delivered {
+      color: #ef233c; /* Reddish Pink */
+    }
+    
+    .order-title {
+      font-size: 1.5rem; /* Increased title font size */
+      margin-bottom: 10px; /* Added margin */
+    }
+    
+    .order-status {
+      font-size: 1.2rem; /* Increased status font size */
+    }
+    .status-icon {
+  font-size: 50px;
+  margin-right: 10px;
+  vertical-align: middle;
+  font-weight: bold; /* Add this line to make the text bold */
+}
+.order-status {
+  font-size: 2rem;
+  font-weight: bold; /* Add this line to make the text bolder */
+}
+/* Rest of your existing CSS styles */
+
+  </style>
+<!-- HEADER -->
+<body>
+  <header>
+    <%- include('./partials/user-header')%>
+   <!-- NAVIGATION -->
+  </header>
+  <div class="container mt-5">
+    <h1 class="text-center mb-4">Order Status</h1>
+    <div class="row">
+        <% if (orders.length === 0) { %>
+            <h3 class="text-center">No orders found.</h3>
+          <% } else { %>
+            <% orders.forEach(order => { %>
+              <div class="col-md-4">
+                <div class="card">
+                  <h5 class="order-title">Order <%= order.orderNumber %></h5>
+                  <p class="order-status">
+                    <span class="status-icon <%= order.status === 'Pending' ? 'pending' : (order.status === 'Cancelled' ? 'cancelled' : 'shipped') %>">
+                      <%= order.status === 'Pending' ? '✘' : (order.status === 'Cancelled' ? '✘' : '✔') %>
+                    </span>
+                    <%= order.status %>
+                  </p>
+                </div>
+              </div>
+            <% }); %>
+          <% } %>
+    </div>
+  </div>
+  
+  <footer>
+    <%- include('./partials/user-footer')%>
+  </footer>
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- jQuery Plugins -->
+  <%- include('./partials/javascript')%>

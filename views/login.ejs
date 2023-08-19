@@ -1,0 +1,55 @@
+<!--styles-->
+<%- include('./partials/styles')%>
+<!-- HEADER -->
+<body>
+  <header>
+    <%- include('./partials/user-header')%>
+  </header>
+  <!-- navigation -->
+
+  <div class="container loginpage">
+    <h2>Login</h2>
+    <% if (successMessage && successMessage.length > 0) { %>
+      <div class="alert alert-success" role="alert">
+        <%= successMessage %>
+      </div>
+    <% } else if (errorMessages && errorMessages.length > 0) { %>
+      <div class="alert alert-danger" role="alert">
+        <% errorMessages.forEach(function(message) { %>
+          <p><%= message %></p>
+        <% }); %>
+      </div>
+    <% } %>
+    
+
+    <form id="loginForm" action="/login" method="POST">
+      <label for="email">Email</label>
+      <input type="text" id="email" name="email" required>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required>
+
+      <button type="submit" style="background-color: #ef233c; color: white;">Login</button>
+    </form>
+
+    <a href="/otplogin">
+      <button type="button" id="otpButton" style="background-color: #ef233c; color: white;">Login with OTP</button>
+    </a>
+    <p class="message" id="errorMessage"></p>
+    <a href="/forgotPassword" class="forgot">Forgot password?</a>
+
+    <a href="/signup">
+      <button class="signup-button" style="background-color: #ef233c; color: white;">Sign Up</button>
+    </a>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <%- include('./partials/user-footer')%>
+  </footer>
+
+  <!-- jQuery Plugins -->
+  <%- include('./partials/javascript')%>
+
+</body>
+</html>

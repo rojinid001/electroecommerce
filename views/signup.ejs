@@ -1,0 +1,51 @@
+<!--styles-->
+<%- include('./partials/styles')%>
+
+<!-- HEADER -->
+<body>
+  <header>
+    <%- include('./partials/user-header')%>
+  </header>
+  <!-- navigation -->
+
+  <div class="container mt-5 signuppage">
+    <h1 class="text-center">User Signup</h1>
+    <% if (error) { %>
+      <div class="alert alert-danger" role="alert">
+        <%= error %>
+      </div>
+    <% } %>
+    <form action="/signup" method="POST">
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" class="form-control" id="name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" class="form-control" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password:</label>
+        <input type="password" class="form-control" id="confirmPassword" name="confirmpassword" required>
+      </div>
+      <button type="submit" class="btn btn-signup btn-block">Sign Up</button>
+    </form>
+    <div class="signup-link">
+      <p>Already have an account? <a href="/signin">Sign In</a></p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <%- include('./partials/user-footer')%>
+  </footer>
+
+  <!-- jQuery Plugins -->
+  <%- include('./partials/javascript')%>
+
+</body>
+</html>
