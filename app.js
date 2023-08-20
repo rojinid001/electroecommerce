@@ -15,6 +15,7 @@ const paymentRoute=require('./routes/paymentRoute')
 const passportConfig = require('./middleware/passportConfig');
 const flash = require('connect-flash');
 require('dotenv').config();
+const PORT=process.env.PORT||3000
 
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -31,7 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Connect to MongoDB
 mongoose
-  .connect('mongodb://localhost:27017/electro', {
+  .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -84,7 +85,7 @@ app.use('/', profileRoute);
 app.use('/', paymentRoute);
 
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
   console.log('Server is running');
 });
 
