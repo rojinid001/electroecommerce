@@ -55,7 +55,7 @@ app.use(session({
   },
 })); 
 app.use(flash());
-console.log('hello everyone')
+
 
 // Set up middleware
 app.use(express.urlencoded({ extended: false }));
