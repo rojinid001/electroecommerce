@@ -1,0 +1,58 @@
+<%- include('./adminpartials/dashboard') %>
+<section>
+  <body>
+    <div class="admin-panel">
+      <%- include('./adminpartials/navbar') %>
+
+      <div class="container-fluid">
+        <div class="row">
+          <!-- Sidebar -->
+          <%- include('./adminpartials/navigation')%>
+          <div class="col-md-9 content">
+            <div class="container">
+              <h2>Add Category</h2>
+              <form action="/admin/category/add" method="POST">
+                <div class="mb-3">
+                  <label for="category-name" class="form-label">Category Name</label>
+                  <input type="text" class="form-control" id="category-name" name="name">
+                </div>
+                <button type="submit" class="btn btn-primary">Add Category</button>
+              </form>
+          
+              <!-- Category List -->
+              <!-- Category List -->
+            <h2>Category List</h2>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Category Name</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% categories.forEach((category) => { %>
+                <tr id="category-row-<%= category._id %>">
+                  <td><%= category.name %></td>
+                  <td>
+                    <!-- Edit and Delete buttons -->
+                    <a href="/admin/category/edit/<%= category._id %>" class="btn btn-primary" data-toggle="modal" data-target="#editCategoryModal-<%= category._id %>">Edit</a>
+
+                    <form id="delete-category-form-<%= category._id %>" action="/admin/category/delete/<%= category._id %>" method="POST">
+                      <button class="btn btn-danger" onclick="confirmDelete('<%= category._id %>')">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+                <% }) %>
+              </tbody>
+            </table>
+            
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </body>
+</section>
+
+<%- include('./adminpartials/script') %>

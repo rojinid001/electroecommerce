@@ -1,0 +1,99 @@
+<!--styles-->
+<%- include('./partials/styles')%>
+<!-- HEADER -->
+<body>
+  <header>
+    <%- include('./partials/user-header')%>
+   <!-- NAVIGATION -->
+
+   <div class="container mt-5 address-form">
+  
+    <h2>Address Section</h2>
+    <form action="/submitaddress" method="post">
+      <!-- Pincode -->
+      <div class="form-group row">
+        <label for="pincode" class="col-sm-2 col-form-label">Pincode:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="pincode" name="pincode" placeholder="Enter Pincode">
+        </div>
+      </div>
+
+      <!-- First Name -->
+      <div class="form-group row">
+        <label for="firstName" class="col-sm-2 col-form-label">First Name:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Enter First Name">
+        </div>
+      </div>
+
+      <!-- Last Name -->
+      <div class="form-group row">
+        <label for="lastName" class="col-sm-2 col-form-label">Last Name:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Enter Last Name">
+        </div>
+      </div>
+
+      <!-- Enter Flat/House no/Floor/Building -->
+      <div class="form-group row">
+        <label for="address" class="col-sm-2 col-form-label">Flat/House/:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="address" name="address" placeholder="Enter Flat/House no/Floor/Building">
+        </div>
+      </div>
+
+      <!-- Enter Colony/Street -->
+      <div class="form-group row">
+        <label for="colony" class="col-sm-2 col-form-label">Colony/Street:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="colony" name="colony" placeholder="Enter Colony/Street">
+        </div>
+      </div>
+
+      <!-- Enter Landmark -->
+      <div class="form-group row">
+        <label for="landmark" class="col-sm-2 col-form-label">Landmark:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="landmark" name="landmark" placeholder="Enter Landmark">
+        </div>
+      </div>
+
+      <!-- Enter City -->
+      <div class="form-group row">
+        <label for="city" class="col-sm-2 col-form-label">City:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="city" name="city" placeholder="Enter City">
+        </div>
+      </div>
+
+      <!-- Enter State -->
+      <div class="form-group row">
+        <label for="state" class="col-sm-2 col-form-label">State:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="state" name="state" placeholder="Enter State">
+        </div>
+      </div>
+
+      <!-- Mobile Number -->
+      <div class="form-group row">
+        <label for="mobile" class="col-sm-2 col-form-label">Mobile Number:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="mobile" name="mobile" placeholder="Enter Mobile Number">
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="form-group row">
+        <div class="col-sm-12 text-center">
+          <button type="submit" class="btn btn-primary">Submit Address</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  
+  <footer>
+    <%- include('./partials/user-footer')%>
+  </footer>
+
+  <!-- jQuery Plugins -->
+  <%- include('./partials/javascript')%>

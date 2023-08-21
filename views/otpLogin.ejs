@@ -1,0 +1,40 @@
+<!--styles-->
+<%- include('./partials/styles')%>
+<!-- HEADER -->
+<body>
+  <header>
+    <%- include('./partials/user-header')%>
+  </header>
+  <!-- navigation -->
+  <div class="container">
+    <h2>Phone Number Verification</h2>
+    <% if (errorMessages && errorMessages.length > 0) { %>
+      <div class="alert alert-danger">
+        <% for (let message of errorMessages) { %>
+          <p><%= message %></p>
+        <% } %>
+      </div>
+    <% } %>
+    
+    <form action="/send-otp" method="POST">
+      <div class="mb-3">
+        <label for="phoneNumberInput" class="form-label">Enter Phone Number</label>
+        <input type="text" class="form-control custom-input" id="phoneNumberInput" name="phoneNumber" placeholder="Enter Phone Number" required>
+      </div>
+      <button type="submit" class="btn btn-primary custom-button" data-bs-toggle="modal" data-bs-target="#otpModal">Send OTP</button>
+    </form>
+    
+    
+  </div>
+
+  <footer>
+    <%- include('./partials/user-footer')%>
+  </footer>
+
+  <!-- jQuery Plugins -->
+  <%- include('./partials/javascript')%>
+
+  <!-- Script to show the OTP Sent Popup -->
+ 
+</body>
+</html>

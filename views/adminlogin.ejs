@@ -1,0 +1,70 @@
+<%- include('./adminpartials/styles') %>
+<div class="authentication-bg min-vh-100">
+    <div class="bg-overlay"></div>
+    <div class="container">
+        <div class="d-flex flex-column min-vh-100 px-3 pt-4">
+            <div class="row justify-content-center my-auto">
+                <div class="col-md-8 col-lg-6 col-xl-5">
+                    <div class="text-center mt-2">
+                        <p class="text-primary text-white">Sign in to continue to Dashboard</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-body p-4"> 
+                            <% if (errorMessages && errorMessages.length > 0) { %>
+                                <div class="alert alert-danger" role="alert">
+                                    <% errorMessages.forEach(function(message) { %>
+                                        <p><%= message %></p>
+                                    <% }); %>
+                                </div>
+                            <% } else if (successMessages && successMessages.length > 0) { %>
+                                <div class="alert alert-success" role="alert">
+                                    <% successMessages.forEach(function(message) { %>
+                                        <p><%= message %></p>
+                                    <% }); %>
+                                </div>
+                            <% } %>
+                            <div class="p-2 mt-4">
+                                <form action="/adminlogin" method="POST">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="username">Username</label>
+                                        <input type="text" class="form-control" id="username" name="email" placeholder="Enter email" value="<%= initialEmail %>" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="userpassword">Password</label>
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" id="userpassword" name="password" placeholder="Enter password" value="<%= initialPassword %>" required>
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <input type="checkbox" id="showPasswordCheckbox"> Show
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3 text-end">
+                                        <button class="btn btn-primary w-sm waves-effect waves-light" type="submit" onclick="return validateForm()">Log In</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div>
+    </div><!-- end container -->
+</div>
+<%- include('./adminpartials/script') %>
+
+<script>
+    function togglePasswordVisibility() {
+        var passwordInput = document.getElementById("userpassword");
+        var showPasswordCheckbox = document.getElementById("showPasswordCheckbox");
+
+        if (showPasswordCheckbox.checked) {
+            passwordInput.type = "text";
+        } else {
+            passwordInput.type = "password";
+        }
+    }
+
+    document.getElementById("showPasswordCheckbox").addEventListener("change", togglePasswordVisibility);
+</script>

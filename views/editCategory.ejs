@@ -1,0 +1,62 @@
+<%- include('./adminpartials/dashboard') %>
+<section>
+  <body>
+    <div class="admin-panel">
+      <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Admin Panel</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-3 sidebar">
+            <h2 class="sidebar-heading">Navigation</h2>
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link" href="/admin/dashboard">Dashboard</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/admin/product">Products</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/admin/category">Categories</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Users</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Orders</a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-9 content">
+            <div class="container">
+              <h2>Edit Category</h2>
+              <form action="/admin/category/update/<%= category._id %>" method="POST">
+                <div class="mb-3">
+                  <label for="category-name" class="form-label">Category Name</label>
+                  <input type="text" class="form-control" id="category-name" name="name" value="<%= category.name %>">
+                </div>
+                <button type="submit" class="btn btn-primary">Update Category</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</section>
+
+<%- include('./adminpartials/script') %>

@@ -1,0 +1,130 @@
+<!--styles-->
+<%- include('./partials/styles')%>
+<!-- HEADER -->
+<body>
+  <header>
+    <%- include('./partials/user-header')%>
+   <!-- NAVIGATION -->
+<nav id="navigation">
+    <!-- container -->
+    <div class="container">
+        <!-- responsive-nav -->
+        <div id="responsive-nav">
+            <!-- NAV -->
+            <ul class="main-nav nav navbar-nav">
+                <li ><a href="/">Home</a></li>
+                <li ><a href="/profile">My profile</a></li>
+                <li><a href="/address">My Addresses</a></li>
+                <li><a href="/wishlist">Wishlist</a></li>
+                <li><a href="/ordersClient">Orders</a></li>
+             
+            </ul>
+            <!-- /NAV -->
+        </div>
+        <!-- /responsive-nav -->
+    </div>
+    <!-- /container -->
+</nav>
+<!-- Main Content Area -->
+<!-- Main Content Area -->
+<h2>Personal Information </h2>
+<div class="profile-info">
+    <form id="profileForm" action="/update-profile" method="post">
+      <!-- First Name -->
+      <div class="form-group row">
+        <label for="firstName" class="col-sm-3 col-form-label">First Name:</label>
+        <div class="col-sm-9">
+          <input type="text" class="form-control" id="firstName" name="firstName" value="<%= user.name %>" disabled>
+        </div>
+      </div>
+      <!-- Last Name -->
+      <div class="form-group row">
+        <label for="lastName" class="col-sm-3 col-form-label">Last Name:</label>
+        <div class="col-sm-9">
+          <!-- Replace user.lastName with the appropriate field from your user object -->
+          <input type="text" class="form-control" id="lastName" name="lastName" value="<%= user.lastName %>" disabled>
+        </div>
+      </div>
+      <!-- Email -->
+      <div class="form-group row">
+        <label for="email" class="col-sm-3 col-form-label">Email:</label>
+        <div class="col-sm-9">
+          <!-- Replace user.email with the appropriate field from your user object -->
+          <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>" disabled>
+        </div>
+      </div>
+      <!-- Gender -->
+      <div class="form-group row">
+        <label for="gender" class="col-sm-3 col-form-label">Gender:</label>
+        <div class="col-sm-9">
+          <!-- Replace user.gender with the appropriate field from your user object -->
+          <input type="text" class="form-control" id="gender" name="gender" value="<%= user.gender %>" disabled>
+        </div>
+      </div>
+      <!-- Phone Number -->
+      <div class="form-group row">
+        <label for="phonenumber" class="col-sm-3 col-form-label">Phone Number:</label>
+        <div class="col-sm-9">
+          <!-- Replace user.phonenumber with the appropriate field from your user object -->
+          <input type="tel" class="form-control" id="phonenumber" name="phonenumber" value="<%= user.phonenumber %>" disabled>
+        </div>
+      </div>
+      <!-- Edit Button -->
+      <div class="profile-actions">
+        <button type="button" class="btn btn-primary" id="editButton">Edit Profile</button>
+        <button type="submit" class="btn btn-success d-none" id="saveButton">Save Changes</button>
+        <button type="button" class="btn btn-danger" id="cancelButton">Cancel</button>
+      </div>
+    </form>
+  </div>
+  
+
+  <footer>
+    <%- include('./partials/user-footer')%>
+  </footer>
+
+  <!-- jQuery Plugins -->
+  <%- include('./partials/javascript')%>
+<!-- Add this script at the end of the profile.ejs template -->
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const editButton = document.getElementById("editButton");
+      const saveButton = document.getElementById("saveButton");
+      const cancelButton = document.getElementById("cancelButton");
+      const formInputs = document.querySelectorAll("#profileForm input");
+  
+      editButton.addEventListener("click", function () {
+        // Enable input fields for editing
+        formInputs.forEach(input => {
+          input.removeAttribute("disabled");
+        });
+  
+        // Show save and cancel buttons
+        saveButton.classList.remove("d-none");
+        cancelButton.classList.remove("d-none");
+  
+        // Hide the edit button
+        editButton.classList.add("d-none");
+      });
+  
+      cancelButton.addEventListener("click", function () {
+        // Disable input fields and revert changes
+        formInputs.forEach(input => {
+          input.setAttribute("disabled", true);
+        });
+  
+        // Hide save and cancel buttons
+        saveButton.classList.add("d-none");
+        cancelButton.classList.add("d-none");
+  
+        // Show the edit button
+        editButton.classList.remove("d-none");
+      });
+    });
+  </script>
+  
+
+</body>
+
+</html>

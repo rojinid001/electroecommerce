@@ -1,0 +1,35 @@
+<!--styles-->
+<%- include('./partials/styles')%>
+<!-- HEADER -->
+<body>
+  <header>
+    <%- include('./partials/user-header')%>
+   <!-- NAVIGATION -->
+
+   <div class="container mt-5">
+    <h2>Address Section</h2>
+    <form action="/address/edit/<%= address._id %>" method="POST">
+      <input type="text" class="form-control" id="pincode" name="pincode" value="<%= address.pincode %>" placeholder="Enter Pincode">
+      <input type="text" class="form-control" id="firstName" name="firstName" value="<%= address.firstName %>" placeholder="Enter First Name">
+      <input type="text" class="form-control" id="lastName" name="lastName" value="<%= address.lastName %>" placeholder="Enter Last Name">
+      <input type="text" class="form-control" id="address" name="address" value="<%= address.address %>" placeholder="Enter Flat/House no/Floor/Building">
+      <input type="text" class="form-control" id="colony" name="colony" value="<%= address.colony %>" placeholder="Enter Colony/Street">
+      <input type="text" class="form-control" id="landmark" name="landmark" value="<%= address.landmark %>" placeholder="Enter Landmark">
+      <input type="text" class="form-control" id="city" name="city" value="<%= address.city %>" placeholder="Enter City">
+      <input type="text" class="form-control" id="state" name="state" value="<%= address.state %>" placeholder="Enter State">
+      <input type="text" class="form-control" id="mobile" name="mobile" value="<%= address.mobile %>" placeholder="Enter Mobile Number">
+
+      <!-- Submit Button -->
+      <div class="form-group row">
+        <div class="col-sm-12 text-center">
+          <button type="submit" class="btn btn-primary">Submit Address</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <footer>
+    <%- include('./partials/user-footer')%>
+  </footer>
+
+  <!-- jQuery Plugins -->
+  <%- include('./partials/javascript')%>
