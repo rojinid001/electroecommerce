@@ -7,6 +7,8 @@ const Order = require('../models/checkout');
 const Cart =require('../models/cart')
 const Checkout=require('../models/checkout')
 const { body, validationResult } = require('express-validator');
+require('dotenv').config();
+
 
 
 
@@ -22,15 +24,12 @@ const Product = require('../models/product');
 const adminlogin = async (req, res) => {
   try {
     // Fetch admin data from the database
-    const admin = await Admin.findOne({ email: 'rojinid99@gmail.com' }); // Adjust the query criteria as needed
+    const adminEmail = process.env.adminEmail; // Use the environment variable
 
-    if (admin) {
-      const initialEmail = admin.email;
-      const initialPassword = admin.password; // Fetch the password too
-
+    if (adminEmail) {
       res.render('adminlogin', {
-        initialEmail,
-        initialPassword, // Pass the initial password to the template
+        
+        // No need to fetch the password here, as you are only using the email
         errorMessages: req.flash('error'),
         successMessages: req.flash('success')
       });
@@ -43,33 +42,36 @@ const adminlogin = async (req, res) => {
   }
 };
 
+
 const adminloginSubmit = async (req, res) => {
   try {
     const { email, password } = req.body;
-   
 
     // Validate input using Express Validator
     await body('email', 'Please enter a valid email').isEmail().run(req);
     await body('password', 'Password is required').notEmpty().run(req);
 
     const errors = validationResult(req);
-
+    
     if (!errors.isEmpty()) {
       const errorMessages = errors.array().map(error => error.msg);
       req.flash('error', errorMessages);
       return res.redirect('/adminlogin');
     }
 
-    const admin = await Admin.findOne({ email });
+    // Fetch admin email and password from environment variables
+  
+    const adminEmail = process.env.adminEmail;
+const adminPassword = process.env.adminPassword;
 
-    if (!admin || admin.password !== password) {
+
+    if (adminEmail === email && adminPassword === password) {
+      req.flash('success', 'Logged in successfully');
+      res.render('adminDashboard', { totalProducts, totalUsers, totalOrders });
+    } else {
       req.flash('error', 'Invalid credentials');
       return res.redirect('/adminlogin');
     }
-
-    req.session.adminId = admin._id;
-    req.flash('success', 'Logged in successfully');
-    res.render('adminDashboard', { totalProducts, totalUsers, totalOrders });
   } catch (error) {
     console.error(error);
     req.flash('error', 'Internal Server Error');
@@ -78,10 +80,11 @@ const adminloginSubmit = async (req, res) => {
 };
 
 
+
 const adminDashboard = async (req, res) => {
   try {
     // Check if the admin is authenticated
-    if (!req.session.admin || !req.session.admin._id) {
+    if (!req.session.admin ) {
       req.flash('error', 'You must be logged in as an admin to access this page.');
       return res.redirect('/adminlogin');
     }
@@ -388,45 +391,35 @@ const deleteOrder = async (req, res) => {
 };
 const authenticateAdmin = async (req, res, next) => {
   const { email, password } = req.body;
+  const adminEmail = process.env.adminEmail; // Get admin email from environment variable
+  const adminPassword = process.env.adminPassword; // Get admin password from environment variable
 
   try {
-    const admin = await Admin.findOne({ email });
+    // Compare the submitted email and password with the values in environment variables
+    if (email !== adminEmail || password !== adminPassword) {
+      req.flash('error', 'Invalid email or password');
+      return res.redirect('/adminlogin');
+    }
+
+    // Store admin data in the session
+    req.session.admin = {
+      email: adminEmail,
+      password:adminPassword
+    };
+
     const totalProducts = await Product.countDocuments();
     const totalUsers = await User.countDocuments();
     const totalOrders = await Checkout.countDocuments();
 
-    if (!admin) {
-      req.flash('error', 'Invalid email or password');
-      return res.redirect('/adminlogin');
-    }
-
-    if (admin.isBlocked) {
-      req.flash('error', 'Admin is blocked. Please contact the administrator.');
-      return res.redirect('/adminlogin');
-    }
-
-    if (admin.password !== password) {
-      req.flash('error', 'Invalid email or password');
-      return res.redirect('/adminlogin');
-    }
-
-    // Store the admin data in the session
-    req.session.admin = {
-      _id: admin._id.toString(),
-      email: admin.email,
-      // Other admin data...
-    };
-
-    
-
     req.flash('success', 'Logged in successfully');
-    res.render('adminDashboard',{totalOrders,totalProducts,totalUsers}); // Redirect to the admin dashboard
+    res.render('adminDashboard', { totalOrders, totalProducts, totalUsers }); // Redirect to the admin dashboard
   } catch (error) {
     console.error(error);
     req.flash('error', 'Authentication failed. Please try again.');
     res.redirect('/adminlogin');
   }
 };
+
 const adminLogout = (req, res) => {
   try {
     // Destroy the admin session
@@ -444,7 +437,7 @@ const adminLogout = (req, res) => {
 };
 
 const adminAuthMiddleware = (req, res, next) => {
-  if (req.session.admin && req.session.admin._id) {
+  if (req.session.admin ) {
     console.log('Admin data found in session:', req.session.admin);
     // Admin is authenticated, proceed to the next middleware or route handler
     next();

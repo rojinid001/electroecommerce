@@ -27,12 +27,12 @@
                                 <form action="/adminlogin" method="POST">
                                     <div class="mb-3">
                                         <label class="form-label" for="username">Username</label>
-                                        <input type="text" class="form-control" id="username" name="email" placeholder="Enter email" value="<%= initialEmail %>" required>
+                                        <input type="text" class="form-control" id="username" name="email" placeholder="Enter email" value="<%= process.env.adminEmail %>" required>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="userpassword">Password</label>
                                         <div class="input-group">
-                                            <input type="password" class="form-control" id="userpassword" name="password" placeholder="Enter password" value="<%= initialPassword %>" required>
+                                            <input type="password" class="form-control" id="userpassword" name="password" placeholder="Enter password" value="<%= process.env.adminPassword %>" required>
                                             <div class="input-group-append">
                                                 <span class="input-group-text">
                                                     <input type="checkbox" id="showPasswordCheckbox"> Show
