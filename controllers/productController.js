@@ -176,7 +176,7 @@ const addToWishlist = async (req, res) => {
     } else {
       const product = await productModel
         .findById(productId)
-        .populate('category', 'name'); 
+        .populate('category', 'name');
 
       if (!product) {
         return res.status(404).send('Product not found');
@@ -187,9 +187,9 @@ const addToWishlist = async (req, res) => {
         price: product.price,
         image: product.image,
         name: product.name,
-        category: product.category.name, 
+        category: product.category ? product.category.name : 'Uncategorized',
       };
-    user.wishlist.push(newWishlistItem);
+      user.wishlist.push(newWishlistItem);
     }
     const savedUser = await user.save();
     console.log(savedUser);
@@ -200,6 +200,7 @@ const addToWishlist = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
 const deleteWishlist = async (req, res) => {
   const itemId = req.params.itemId;
   try {
