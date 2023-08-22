@@ -181,6 +181,10 @@ const addToWishlist = async (req, res) => {
       if (!product) {
         return res.status(404).send('Product not found');
       }
+
+      // Log the 'product' object here to check its contents
+      console.log('Product:', product);
+
       const newWishlistItem = {
         product: productId,
         quantity: 1,
@@ -191,8 +195,8 @@ const addToWishlist = async (req, res) => {
       };
       user.wishlist.push(newWishlistItem);
     }
+
     const savedUser = await user.save();
-    console.log(savedUser);
 
     res.redirect('/wishlist');
   } catch (error) {
@@ -200,6 +204,7 @@ const addToWishlist = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
 
 const deleteWishlist = async (req, res) => {
   const itemId = req.params.itemId;
