@@ -83,7 +83,7 @@ const checkout = async (req, res) => {
 };
 const authenticate = async (req, res) => {
   const { email, password } = req.body;
-
+  console.log("user authentication done successfuly")
   try {
     const user = await User.findOne({ email });
 
@@ -112,14 +112,17 @@ const authenticate = async (req, res) => {
         name: user.name,
         // Other user data...
       };
+      
     } else {
       console.error('Invalid user data. Unable to set user in the session.');
     }
     
 
     req.flash('success', 'Logged in successfully');
+    
     res.redirect('/'); // Redirect to the home page
   } catch (error) {
+    console.log("user authentication done successfuly")
     console.error(error);
     req.flash('error', 'Authentication failed. Please try again.');
     res.redirect('/login');
@@ -224,9 +227,6 @@ const updatePassword = async (req, res) => {
   }
 };
 
-module.exports = {
-  updatePassword
-};
 
 module.exports = {
   homepage,

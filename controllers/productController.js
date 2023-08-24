@@ -28,6 +28,7 @@ const getCart = async (req, res) => {
     }
     const userId = req.session.user._id;
     const cart = await Cart.findOne({ user: userId }).populate('items.product');
+   
 
     if (!cart) {
       req.flash('error', 'Your cart is empty.');
@@ -84,7 +85,7 @@ const addToCart = async (req, res) => {
     }
 
     cart.subtotal = cart.items.reduce((total, item) => total + item.price * item.quantity, 0);
-    cart.total = cart.subtotal; 
+    cart.total = cart.subtotal;
 
     await cart.save();
     user.cart = cart;
@@ -96,6 +97,7 @@ const addToCart = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
 const removeFromCart = async (req, res) => {
   const productId = req.params.id;
 
@@ -236,28 +238,28 @@ const renderCheckoutPage = async (req, res) => {
       return res.redirect('/cart'); 
     }
     let totalAmount = 0;
-     cart.items.forEach((item) => {
+    cart.items.forEach((item) => {
       if (item.product && item.quantity) {
         totalAmount += item.product.price * item.quantity;
       }
     });
     const orderedProducts = cart.items.map(item => ({
-      user:userId,
+      user: userId,
       productId: item.product._id.toString(), 
       name: item.product.name,
       quantity: item.quantity,
       price: item.product.price
     }));
     const orderedProductDocs = await OrderedProduct.create(orderedProducts);
+
+    // Log cartItems here to check if it's being passed correctly
+    console.log('cartItems:', cart.items);
     
-   
     res.render('checkout', {
       cartItems: cart.items,
       totalAmount,
       userId: userId,
     });
-     // Add this line to log cartItems
-    
     
   } catch (error) {
     console.error(error);
