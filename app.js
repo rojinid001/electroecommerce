@@ -19,7 +19,9 @@ const PORT=process.env.PORT||3000
 
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-
+const multer = require('multer');
+const upload = multer();
+app.use(upload.none());
 // Set the view engine
 app.set('view engine', 'ejs');
 
@@ -64,6 +66,7 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passportConfig.initialize());
 app.use(passportConfig.session());
+app.use(upload.none());
 
 // Parse JSON bodies
 app.use(bodyParser.json());

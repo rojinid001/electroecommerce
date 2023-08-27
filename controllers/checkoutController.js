@@ -5,12 +5,25 @@ const submitCheckout = async (req, res) => {
   try {
     const userId = req.session.user._id;
     console.log("User ID:", userId);
+    console.log("Form Data Received:", req.body);
 
-    const isDifferentAddress = req.body.shiping_address === 'on';
+    // Check if the "shiping-address" checkbox is checked
+    const isDifferentAddress = req.body['shiping-address'] === 'on';
     console.log("Is Different Address:", isDifferentAddress);
-    
 
-
+    // Server-side validation
+    if (
+      !req.body.firstName ||
+      !req.body.lastName ||
+      !req.body.email ||
+      !req.body.address ||
+      !req.body.city ||
+      !req.body.country ||
+      !req.body.zipCode ||
+      !req.body.telephone
+    ) {
+      return res.status(400).send('Please fill in all required fields');
+    }
 
     const user = await User.findById(userId).populate('cart.items.product');
     if (!user) {
@@ -41,7 +54,8 @@ const submitCheckout = async (req, res) => {
         telephone: isDifferentAddress ? req.body.ship_telephone : req.body.telephone
       },
     });
-    console.log("endi:",req.body)
+    console.log("endi:", req.body);
+
     // Save checkout details
     checkout.status = 'Pending';
     await checkout.save();
@@ -54,19 +68,7 @@ const submitCheckout = async (req, res) => {
   }
 };
 
+
 module.exports = {
   submitCheckout
 };
-    // Validation: Check if required billing details are provided
-    // if (!req.body.firstName || !req.body.lastName || !req.body.email || !req.body.address || !req.body.city || !req.body.country || !req.body.zipcode || !req.body.telephone) {
-    //   console.log("Billing details incomplete:", req.body);
-    //   return res.status(400).json({ error: 'Billing details are incomplete' });
-    // }
-
-    // // Validation: Check if shipping is different and if required shipping details are provided
-    // if (isDifferentAddress) {
-    //   if (!req.body.ship_firstName || !req.body.ship_lastName || !req.body.ship_email || !req.body.ship_address || !req.body.ship_city || !req.body.ship_country || !req.body.ship_zipcode || !req.body.ship_telephone) {
-    //     console.log("Shipping details incomplete:", req.body);
-    //     return res.status(400).json({ error: 'Shipping details are incomplete' });
-    //   }
-    // }

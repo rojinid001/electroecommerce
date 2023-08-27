@@ -8,7 +8,7 @@
       <div class="row">
         <div class="col-md-7">
           <!-- Checkout Form -->
-          <form action="/checkoutsubmit" method="POST">
+          <form action="/checkoutsubmit" method="POST" id="checkout-form">
             <!-- Billing Details -->
             <div class="caption">
               <div class="form-group">
@@ -44,7 +44,8 @@
                 <h3 class="title">Shipping address</h3>
               </div>
               <div class="input-checkbox">
-                <input type="checkbox" id="shiping-address" name="shiping-address">
+                <input type="checkbox" id="shiping-address" name="shiping-address" value="on">
+
                 <label for="shiping-address">
                   <span></span>
                   Ship to a different address?
@@ -137,109 +138,88 @@
   </footer>
   <%- include('./partials/javascript')%>
   <script>
-    function openRazorpay(totalAmount) {
-      const keyId = 'rzp_test_ISfErmWBlVaoBh';
-      const amountInPaise = totalAmount * 100;
-  
-      const options = {
-        key: keyId,
-        amount: amountInPaise,
-        currency: 'INR',
-        name: 'Electro ecom',
-        description: 'Test Payment',
-        image: '', // Replace with your company logo URL
-        handler: function (response) {
-          console.log(response);
-          alert('Payment successful');
-        },
-        prefill: {
-          name: 'Rojin I D',
-          email: 'rojinid99@gmail.com',
-          contact: '8971582431'
-        }
-      };
-  
-      const rzp = new Razorpay(options);
-      rzp.open();
+   function openRazorpay(totalAmount) {
+    const keyId = 'rzp_test_ISfErmWBlVaoBh';
+    const amountInPaise = totalAmount * 100;
+
+    const options = {
+      key: keyId,
+      amount: amountInPaise,
+      currency: 'INR',
+      name: 'Electro ecom',
+      description: 'Test Payment',
+      image: '', // Replace with your company logo URL
+      handler: function (response) {
+        console.log(response);
+        alert('Payment successful');
+      },
+      prefill: {
+        name: 'Rojin I D',
+        email: 'rojinid99@gmail.com',
+        contact: '8971582431'
+      }
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.open();
+  }
+
+  function submitForm() {
+    try {
+      console.log('Submitting form...');
+      document.querySelector('form').submit();
+    } catch (error) {
+      console.error('Error submitting form:', error);
     }
-    function submitForm() {
-  try {
-    console.log('Submitting form...');
-    document.querySelector('form').submit();
-  } catch (error) {
-    console.error('Error submitting form:', error);
+  }
+
+  function placeOrder() {
+  const form = document.getElementById('checkout-form'); // Get the form by its ID
+
+  // Check if the form is valid
+  if (form.checkValidity()) {
+    // Collect form data
+    const formData = new FormData(form);
+
+    // Convert form data to an object for displaying
+    const formDataObject = {};
+    formData.forEach((value, key) => {
+      formDataObject[key] = value;
+    });
+
+    // Display the form data in an alert
+    const formDataString = JSON.stringify(formDataObject, null, 2);
+
+    // Proceed with form submission and payment popup as before
+    const totalAmountElement = document.getElementById('totalAmount');
+    const totalAmount = parseFloat(totalAmountElement.dataset.amount);
+    
+
+    // Send form data to the server using Fetch API or XMLHttpRequest
+    fetch('/checkoutsubmit', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded', // Change the content type
+  },
+  body: new URLSearchParams(formData).toString(), // Convert the FormData to a URL-encoded string
+})
+  .then(response => {
+    if (response.ok) {
+      // Open the Razorpay payment popup
+      openRazorpay(totalAmount);
+    } else {
+      alert('Please Fill all the required fields');
+    }
+  })
+  .catch(error => {
+    const errorMessage = `Error: ${error.message}`;
+    window.alert(errorMessage);
+  });
+  } else {
+    // Display validation errors or messages here
+    window.alert('Please correct the form errors before submitting.');
   }
 }
-
- function placeOrder() {
-    const form = document.querySelector('form');
-
-    // Check if the form is valid
-    if (form.checkValidity()) {
-      const totalAmountElement = document.getElementById('totalAmount');
-      const totalAmount = parseFloat(totalAmountElement.dataset.amount);
-
-      // Collect form data
-      const formData = new FormData(form);
-
-      // Check if any required field is empty
-      let fieldsComplete = true;
-  const requiredFields = [
-    'firstName', 'lastName', 'email', 'address', 'city',
-    'country', 'zipCode', 'telephone'
-  ];
-
-  // Iterate over the required fields and validate their values
-  requiredFields.forEach(field => {
-    if (!formData.get(field)) {
-      fieldsComplete = false;
-    }
-  });
-
-  // Check shipping details if necessary
-  const shipToDifferentAddress = document.getElementById('shiping-address').checked;
-  if (shipToDifferentAddress) {
-    const requiredShippingFields = [
-      'ship_firstName', 'ship_lastName', 'ship_email', 'ship_address',
-      'ship_city', 'ship_country', 'ship_zipCode', 'ship_telephone'
-    ];
-
-    requiredShippingFields.forEach(field => {
-      if (!formData.get(field)) {
-        fieldsComplete = false;
-      }
-    });
-  }
-     
-
-      if (fieldsComplete) {
-        // Send form data to the server using Fetch API or XMLHttpRequest
-        fetch('/checkoutsubmit', {
-          method: 'POST',
-          body: formData,
-        })
-          .then(response => {
-            if (response.ok) {
-              // Open the Razorpay payment popup
-              openRazorpay(totalAmount);
-            } else {
-              throw new Error('Form submission failed');
-            }
-          })
-          .catch(error => {
-            const errorMessage = `Error: ${error.message}`;
-            window.alert(errorMessage);
-          });
-      } else {
-        // Display alert for incomplete fields
-        window.alert('Please fill in all required fields.');
-      }
-    } else {
-      // Display validation errors or messages here
-      window.alert('Please correct the form errors before submitting.');
-    }
-  }
-
   </script>
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
