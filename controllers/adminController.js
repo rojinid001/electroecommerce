@@ -122,6 +122,8 @@ const adminProduct = async (req, res) => {
 
 const postProduct = async (req, res) => {
   try {
+   
+
     const { name, price, description, quantity, brand, category } = req.body;
     const images = req.files.map((file) => file.filename);
 
@@ -134,7 +136,6 @@ const postProduct = async (req, res) => {
       category: new Category(),
       image: images,
     });
-    console.log(product);
 
     await product.save();
 
@@ -144,6 +145,7 @@ const postProduct = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
 const editProduct = async (req, res) => {
   try {
     const { id } = req.params;
